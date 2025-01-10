@@ -3,8 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-
-# Class for the login page
+# Clase para la página de inicio de sesión
 class LoginPageAround:
     email_field = (By.ID, 'email')
     password_field = (By.ID, 'password')
@@ -27,57 +26,42 @@ class LoginPageAround:
         self.set_password(password)
         self.click_sign_in_button()
 
-
-# Class for the header
+# Clase para el encabezado
 class HeaderPageAround:
-    # Create a locator for the Email element in the header
-    header_user = ...
+    header_user = (By.CLASS_NAME, 'header__user')
 
     def __init__(self, driver):
         self.driver = driver
 
-    # Wait for the page to load
     def wait_for_load_header(self):
         WebDriverWait(self.driver, 3).until(expected_conditions.visibility_of_element_located(self.header_user))
 
-    # Method to retrieve the text of the element in the header
     def email_in_header(self):
-        ...
+        return self.driver.find_element(*self.header_user).text
 
-
-# Class with the autotest
+# Clase con la prueba automatizada
 class TestAround:
 
     driver = None
 
     @classmethod
     def setup_class(cls):
-        # Create a driver for Chrome
         cls.driver = webdriver.Chrome()
 
     def test_check_email_in_header(self):
-        # Open the test application page
-        self.driver.get('https://around-v1.nm.tripleten-services.com/signin?lng=en')
+        self.driver.get('https://around-v1.es.practicum-services.com/')
 
-        # Create a page object class for the login page
-        ...
-        # log in
-        email = "Enter your email"
-        password = "Enter your password"
-        # Pass these variables to the method
-        ...
+        login_page = LoginPageAround(self.driver)
+        email = "Introduce tu correo electrónico"
+        password = "Introduce tu contraseña"
+        login_page.login(email, password)
 
-        # Create an object for the header
-        ...
-        # Wait for the header to load
-        ...
-        # Retrieve the text of an element in the header
-        email_from_header = ...
+        header_page = HeaderPageAround(self.driver)
+        header_page.wait_for_load_header()
+        email_from_header = header_page.email_in_header()
 
-        # Check that the retrieved value matches email
-        assert ...
+        assert email_from_header == email
 
     @classmethod
     def teardown_class(cls):
-        # Close the browser
-        ...
+        cls.driver.quit()
