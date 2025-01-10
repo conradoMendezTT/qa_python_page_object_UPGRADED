@@ -8,8 +8,8 @@ class LoginPageAround:
     password_field = (By.ID, 'password')
     # The Login button locator
     sign_in_button = (By.CLASS_NAME, 'auth-form__button')
-    # Add a locator for the Sign-up button here
-    ...
+    # Agrega aquí un localizador para el botón Registrarse
+    registration_button = (By.CLASS_NAME, "header__auth-link")
 
     # The class constructor
     def __init__(self, driver):
@@ -25,9 +25,9 @@ class LoginPageAround:
 
     # The method clicks on the Sign-up button
     def click_registration_button(self):
-        ...
+            self.driver.find_element(*self.registration_button).click()
 
     # The method validates the text on the Sign-up button
     def check_text_registration_button(self):
-        registration_button_text = ...
-        assert ...
+        registration_button_text = self.driver.find_element(*self.registration_button).text()
+        assert registration_button_text == 'Registrarse', 'El texto del botón no coincide con "Registrarse"'
