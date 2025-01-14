@@ -7,3 +7,25 @@
 # Crea varias instancias y muestra cómo cambia count.
 
 
+
+class Counter:
+    count = 0
+
+    @classmethod
+    def reset_count(cls):
+        cls.count = 0
+
+    def __init__(self):
+        Counter.count += 1
+        print(f"Contador de intancia: {Counter.count}")
+
+
+
+instance_1 = Counter()
+instance_2 = Counter()
+
+print("Reseteando atributos de clase")
+
+instance_1.reset_count()
+
+instance_3= Counter()
