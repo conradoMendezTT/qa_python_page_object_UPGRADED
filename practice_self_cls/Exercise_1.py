@@ -8,3 +8,28 @@
 # Crea un método de instancia que imprima name y species.
 # Crea instancias, modifica el species, y observa cómo cambian los atributos.
 
+class Person:
+    species = "Homo sapiens"
+
+    def __init__(self, name):
+        self.name = name
+
+
+    @classmethod
+    def change_species(cls, new_specie):
+        cls.species = new_specie
+
+    def print_name_and_species(self):
+        name_instancia = self.name
+        name_clase = self.species
+
+        print(f"El elemento de instancia es {name_instancia} y el de la clase es {name_clase}")
+
+
+person_1 = Person("Conrado")
+person_1.print_name_and_species()
+
+person_1.change_species("Humano")
+person_1.print_name_and_species()
+
+
