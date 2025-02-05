@@ -37,7 +37,7 @@ class HomePageAround:
     # Espera a que se cargue la página
     # Espera a que aparezca el campo Ocupación
     def wait_for_load_home_page(self):
-        WebDriverWait(self.driver, 3).until(expected_conditions.visibility_of_element_located(self.profile_description))
+        WebDriverWait(self.driver, 6).until(expected_conditions.visibility_of_element_located(self.profile_description))
 
     # Recupera el valor del campo Ocupación
     def get_description(self):
