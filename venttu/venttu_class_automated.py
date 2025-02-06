@@ -18,13 +18,12 @@ class LoginPageVenttu:
          email_field = WebDriverWait(self.driver, 10).until(expected_conditions
                                                             .visibility_of_element_located(self.email_field)) #La funcion recibe una tupla
          email_field.send_keys(email_to_send)
-         email_field.clear()
-         rmai
 
     def send_password(self, password_to_send):
         pass_field = WebDriverWait(self.driver, 10).until(expected_conditions
                                                           .visibility_of_element_located(self.password_field))
         pass_field.send_keys(password_to_send)
+        pass_field.clear()
 
     def click_sign_in_button(self):
         log_in_btn = WebDriverWait(self.driver, 10).until(
@@ -55,6 +54,31 @@ class LoginPageVenttu:
         except:
             return False  # Si no se encuentra o no está visible, retorna False
 
+    def get_element_text(self, element):
+        try:
+            # Si element es un selector (tupla), lo localizamos; si no, asumimos que es un WebElement
+            element = (WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(element))
+                       if isinstance(element, tuple) else element)
+
+            text = element.text.strip()
+            if not text:
+                raise ValueError("El elemento no contiene texto visible.")
+
+            return text
+
+        except Exception as e:
+            raise RuntimeError(f"Error al obtener el texto del elemento: {e}")
+
+    def element_text_assertion(self, text_to_assert, element):
+        assert self.get_element_text(element) == text_to_assert, "El texto del elemento no coincide."
+
+    def signing_button_text_assertion(self):
+        sign_in_btn = WebDriverWait(self.driver, 10).until(
+            expected_conditions.visibility_of_element_located(self.sign_in_button)
+        )
+        self.element_text_assertion("Iniciar", sign_in_btn)
+
+
 class TestVenttu:
 
     driver = None
@@ -68,6 +92,8 @@ class TestVenttu:
     # se ejecuta por cada instancia de la clase de test.
     def setup_method(self):
         self.driver.get('https://login.venttu.com/')
+        #Abrir la pestana completa
+        self.driver.maximize_window()
 
 
     def test_set_email(self):
@@ -86,6 +112,10 @@ class TestVenttu:
         login.send_email("tripleten_cohort_20@POC.com")
         login.click_sign_in_button()
         assert login.is_password_warning_message_displayed() == True
+
+    def test_sign_in_button_text_assertion(self):
+        login = LoginPageVenttu(self.driver)
+        login.signing_button_text_assertion()
 
 
     @classmethod
