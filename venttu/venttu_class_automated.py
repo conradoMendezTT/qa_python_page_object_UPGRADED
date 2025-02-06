@@ -32,6 +32,14 @@ class LoginPageVenttu:
         self.send_password(password)
         self.click_sign_in_button()
 
+    def is_email_warning_message_displayed(self):
+        try:
+            email_warning = WebDriverWait(self.driver, 10).until(
+                expected_conditions.visibility_of_element_located(self.email_error_warning)
+            )
+            return email_warning.is_displayed()
+        except:
+            return False  # Si no se encuentra o no está visible, retorna False
 
 class TestVenttu:
 
@@ -42,25 +50,31 @@ class TestVenttu:
         # Crea un controlador para Chrome
         cls.driver = webdriver.Chrome()
 
-    def test_set_email(self):
-        # Abre la página de la aplicación de prueba
-        self.driver.get('https://around-v1.es.practicum-services.com/')
+    #setup_method(self) es un metodo especial de pytest.
+    # se ejecuta por cada instancia de la clase de test.
+    def setup_method(self):
+        self.driver.get('https://login.venttu.com/')
 
+
+    def test_set_email(self):
         # Crea una clase de objeto de página para la página de inicio de sesión
         login_venttu = LoginPageVenttu(self.driver)
         # Iniciar sesión
         login_venttu.login('correo@electrónico', 'contraseña')
 
-        # Utiliza assert para comprobar que el valor actual de Ocupación coincida con el valor esperado
-
-       #METERALGUNA ASSERTION ACA PARA EL ERROR EN PANTALLA
 
     def test_display_warning_email_box(self):
+        login = LoginPageVenttu(self.driver)
+        login.click_sign_in_button()
+        assert login.is_email_warning_message_displayed() == True
 
     def test_display_warning_password_box(self):
+        login = LoginPageVenttu(self.driver)
+        login.click_sign_in_button()
+        assert login.is_email_warning_message_displayed() == True
 
 
     @classmethod
     def teardown_class(cls):
-        # cerrar el navegador
+        #Cerrar el navegador
         cls.driver.quit()
